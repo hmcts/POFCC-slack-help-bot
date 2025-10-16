@@ -81,7 +81,7 @@ const server = http.createServer((req, res) => {
         }
         res.end('OK');
     } else if (req.url === '/health/readiness') {
-        res.end(`<h1>cot-slack-help-bot</h1>`)
+        res.end(`<h1>pofcc-slack-help-bot</h1>`)
     } else if (req.url === '/health/error') {
         // Dummy error page
         res.statusCode = 500;
@@ -481,7 +481,7 @@ app.event('app_mention', async ({ event, context, client, say }) => {
 
                 } else {
                     await say({
-                        text: `Hi <@${event.user}>, if you want to escalate a request please tag \`cot-support\`, to see what else I can do reply back with \`help\``,
+                        text: `Hi <@${event.user}>, if you want to escalate a request please tag \`pofcc-support\`, to see what else I can do reply back with \`help\``,
                         thread_ts: event.thread_ts
                     });
                 }

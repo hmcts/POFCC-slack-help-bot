@@ -13,8 +13,8 @@ const setup = () => {
     if (config.has('secrets.cftptl-intsvc')) {
         setSecret('secrets.cftptl-intsvc.jira-username', 'jira.username');
         setSecret('secrets.cftptl-intsvc.jira-api-token', 'jira.api_token');
-        setSecret('secrets.cftptl-intsvc.cot-slack-bot-token', 'slack.bot_token');
-        setSecret('secrets.cftptl-intsvc.cot-slack-app-token', 'slack.app_token');
+        setSecret('secrets.cftptl-intsvc.pofcc-slack-bot-token', 'slack.bot_token');
+        setSecret('secrets.cftptl-intsvc.pofcc-slack-app-token', 'slack.app_token');
     }
 };
 

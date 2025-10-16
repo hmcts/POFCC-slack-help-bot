@@ -291,7 +291,7 @@ function openHelpRequestBlocks() {
     return {
         "title": {
             "type": "plain_text",
-            "text": "COT Support Request"
+            "text": "POFCC Support Request"
         },
         "submit": {
             "type": "plain_text",
@@ -326,8 +326,6 @@ function openHelpRequestBlocks() {
                         "emoji": true
                     },
                     "options": [
-                        option('Highest'),
-                        option('High'),
                         option('Medium'),
                         option('Low'),
                     ],
