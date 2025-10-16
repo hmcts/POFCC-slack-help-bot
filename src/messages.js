@@ -326,6 +326,8 @@ function openHelpRequestBlocks() {
                         "emoji": true
                     },
                     "options": [
+                        option('Highest'),
+                        option('High'),
                         option('Medium'),
                         option('Low'),
                     ],
