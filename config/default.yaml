@@ -2,15 +2,15 @@
 slack:
   # bot_token: no default
   # app_token: no default
-  report_channel: bot-test
-  report_channel_id: C01KHKNJUKE
+  report_channel: pofcc-onboarding-support
+  report_channel_id: C09LE7XVCMV
 
 jira:
   start_transition_id: 21
   done_transition_id: 41
-  project: SBOX
-  issue_type_name: Bug
-  issue_type_id: 10900
+  project: POFCC
+  issue_type_name: Task
+  issue_type_id: 3
   # username: no default
   # api_token: no default
 

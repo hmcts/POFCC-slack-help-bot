@@ -383,15 +383,22 @@ function openHelpRequestBlocks() {
             {
                 "type": "input",
                 "block_id": "environment",
-                "optional": true,
                 "element": {
-                    "type": "plain_text_input",
-                    "action_id": "environment",
-                    "placeholder": {
+                    "type": "static_select",
+                     "placeholder": {
                         "type": "plain_text",
-                        "text": "Environment URL",
+                        "text": "Choose an environment",
                         "emoji": true
                     },
+                    "options": [
+                        option('AAT / Staging', 'staging'),
+                        option('Preview / Dev', 'dev'),
+                        option('Production'),
+                        option('Perftest / Test', 'test'),
+                        option('ITHC'),
+                        option('N/A', 'none')
+                    ],
+                    "action_id": "environment"
                 },
                 "label": {
                     "type": "plain_text",
@@ -399,6 +406,7 @@ function openHelpRequestBlocks() {
                     "emoji": true
                 }
             },
+
             {
                 "type": "input",
                 "block_id": "description",

@@ -211,7 +211,6 @@ const ws = new WorkflowStep('superbot_help_request', {
         const helpRequest = {
             user,
             summary: inputs.summary.value || "None",
-            environment: inputs.env.value || "None",
             team: inputs.team.value || "None",
             description: inputs.desc.value,
             analysis: inputs.alsys.value,
@@ -340,7 +339,8 @@ function extractLabels(values) {
     const priority = `priority-${values.priority.priority.selected_option.value}`
     const team = `team-${values.team.team.selected_option.value}`
     const category = `category-${values.category.category.selected_option.value}`
-    return [priority, team, category];
+    const environment = `environment-${values.environment.environment.selected_option.value}`
+    return [priority, team, category,environment];
 }
 
 app.view('create_help_request', async ({ ack, body, view, client }) => {
@@ -366,7 +366,7 @@ app.view('create_help_request', async ({ ack, body, view, client }) => {
             category: view.state.values.category.category.selected_option.text.text,
             priority: view.state.values.priority.priority.selected_option.text.text,
             references: view.state.values.references?.references?.value || "None",
-            environment: view.state.values.environment?.environment?.value || "None",
+            environment: view.state.values.environment.environment.selected_option.text.text,
             description: view.state.values.description.description.value,
             analysis: view.state.values.analysis.analysis.value,
             replicateSteps: view.state.values.replicateSteps.replicateSteps.value,
