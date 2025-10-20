@@ -9,8 +9,8 @@ jira:
   start_transition_id: 21
   done_transition_id: 41
   project: POFCC
-  issue_type_name: Task
-  issue_type_id: 3
+  issue_type_name: Support
+  issue_type_id: 18400
   # username: no default
   # api_token: no default
 

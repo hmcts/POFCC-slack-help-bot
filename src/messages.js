@@ -341,30 +341,6 @@ function openHelpRequestBlocks() {
             },
             {
                 "type": "input",
-                "block_id": "category",
-                "element": {
-                    "type": "static_select",
-                    "placeholder": {
-                        "type": "plain_text",
-                        "text": "Select a category",
-                        "emoji": true
-                    },
-                    "options": [
-                        option('Work Allocation', 'wa'),
-                        option('Hearings'),
-                        option('Case Flags', 'flags'),
-                        option('Case Linking', 'linking'),
-                    ],
-                    "action_id": "category"
-                },
-                "label": {
-                    "type": "plain_text",
-                    "text": "Capability",
-                    "emoji": true
-                }
-            },
-            {
-                "type": "input",
                 "block_id": "references",
                 "optional": true,
                 "element": {
@@ -466,65 +442,7 @@ function openHelpRequestBlocks() {
                     "text": "Analysis done so far",
                     "emoji": true
                 }
-            },
-            {
-                "type": "input",
-                "block_id": "team",
-                "element": {
-                    "type": "static_select",
-                    "placeholder": {
-                        "type": "plain_text",
-                        "text": "Select other if missing",
-                        "emoji": true
-                    },
-                    "options": [
-                        option('Access Management', 'am'),
-                        option('Adoption'),
-                        option('Architecture'),
-                        option('Bulk scan', 'bulkscan'),
-                        option('Bulk print', 'bulkprint'),
-                        option('CCD'),
-                        option('Civil Damages', 'civildamages'),
-                        option('Civil Unspecified', 'CivilUnspec'),
-                        option('CMC'),
-                        option('Divorce'),
-                        option('Domestic Abuse', "domesticabuse"),
-                        option('No fault divorce', 'nfdivorce'),
-                        option('Employment Tribunals', 'et'),
-                        option('Ethos'),
-                        option('Evidence Management', 'evidence'),
-                        option('Expert UI', 'xui'),
-                        option('FaCT'),
-                        option('Fee & Pay', 'feeAndPay'),
-                        option('Financial Remedy', 'finrem'),
-                        option('FPLA'),
-                        option('Family Private Law', 'FPRL'),
-                        option('Family Public Law', 'FPL'),
-                        option('Heritage'),
-                        option('HMI'),
-                        option('Management Information', 'mi'),
-                        option('Immigration and Asylum', 'iac'),
-                        option('IDAM'),
-                        option('Other'),
-                        option('Private Law','private-law'),
-                        option('Probate'),
-                        option('Reference Data', 'refdata'),
-                        option('Reform Software Engineering', 'reform-software-engineering'),
-                        option('Security Operations or Secure design', 'security'),
-                        option('SSCS'),
-                        option('PayBubble'),
-                        option('PET'),
-                        option('Work Allocation', 'workallocation'),
-                    ],
-                    "action_id": "team"
-                },
-                "label": {
-                    "type": "plain_text",
-                    "text": "Which team are you from?",
-                    "emoji": true
-                }
-            },
-            
+            }
         ],
         "type": "modal",
         callback_id: 'create_help_request'

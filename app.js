@@ -144,7 +144,6 @@ const ws = new WorkflowStep('superbot_help_request', {
         // See src/messages.js:superBotMessageBlocks(inputs)
         const summary = values.summary_block.summary_input;
         const env = values.env_block.env_input;
-        const team = values.team_block.team_input;
         const area = values.area_block.area_input;
         const build = values.build_block.build_input;
         const desc = values.desc_block.desc_input;
@@ -161,10 +160,6 @@ const ws = new WorkflowStep('superbot_help_request', {
             },
             env: {
                 value: env.value,
-                skip_variable_replacement: false
-            },
-            team: {
-                value: team.value,
                 skip_variable_replacement: false
             },
             area: {
@@ -337,10 +332,8 @@ app.shortcut('launch_shortcut', async ({ shortcut, body, ack, context, client })
 
 function extractLabels(values) {
     const priority = `priority-${values.priority.priority.selected_option.value}`
-    const team = `team-${values.team.team.selected_option.value}`
-    const category = `category-${values.category.category.selected_option.value}`
     const environment = `environment-${values.environment.environment.selected_option.value}`
-    return [priority, team, category,environment];
+    return [priority,environment];
 }
 
 app.view('create_help_request', async ({ ack, body, view, client }) => {
@@ -363,7 +356,6 @@ app.view('create_help_request', async ({ ack, body, view, client }) => {
         const helpRequest = {
             user,
             summary: view.state.values.summary.title.value,
-            category: view.state.values.category.category.selected_option.text.text,
             priority: view.state.values.priority.priority.selected_option.text.text,
             references: view.state.values.references?.references?.value || "None",
             environment: view.state.values.environment.environment.selected_option.text.text,
