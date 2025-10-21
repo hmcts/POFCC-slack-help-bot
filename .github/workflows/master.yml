@@ -1,10 +1,10 @@
 on:
   pull_request:
     branches:
-      - main
+      - master
   push:
     branches:
-      - main
+      - master
 
 name: Publish
 
@@ -56,4 +56,4 @@ jobs:
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/pofcc/slack-help-bot:prod-${{ steps.get-short-sha.outputs.shortSha }}-${{ steps.get-timestamp.outputs.timestamp }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/pofcc/slack-help-bot:prod-${{ steps.get-short-sha.outputs.shortSha }}-${{ steps.get-timestamp.outputs.timestamp }}
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
