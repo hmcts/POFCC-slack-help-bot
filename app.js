@@ -525,6 +525,7 @@ app.action('assign_help_request_to_me', async ({
 app.action('resolve_help_request', async ({
     body, action, ack, client, context, payload
 }) => {
+    console.log(`resolve_help_request`)
     try {
         await ack();
 
@@ -744,6 +745,7 @@ function convertProfileToName(profile) {
 }
 
 app.event('message', async ({ event, context, client, say }) => {
+    console.log(`Adding messages to Jira`)
     try {
         // filter unwanted channels in case someone invites the bot to it
         // and only look at threaded messages
@@ -752,11 +754,11 @@ app.event('message', async ({ event, context, client, say }) => {
                 channel: event.channel,
                 'message_ts': event.thread_ts
             })).permalink
-
+            console.log(`slackLink found ${slackLink}`)
             const user = (await client.users.profile.get({
                 user: event.user
             }))
-
+            console.log(`user found ${user}`)
             const name = convertProfileToName(user.profile);
 
             const helpRequestMessages = (await client.conversations.replies({
@@ -767,7 +769,7 @@ app.event('message', async ({ event, context, client, say }) => {
 
             if (helpRequestMessages.length > 0 && (
                 helpRequestMessages[0].text === 'New support request raised' ||
-                helpRequestMessages[0].text === 'Duplicate issue')
+                helpRequestMessages[0].text === 'New banner request raised')
             ) {
                 const jiraId = extractJiraIdFromBlocks(helpRequestMessages[0].blocks)
                 console.log(`Jira extracted ${jiraId}`)
