@@ -319,7 +319,8 @@ app.shortcut('launch_shortcut', async ({ shortcut, body, ack, context, client })
         await ack();
 
         // Un-comment if you want the JSON for block-kit builder (https://app.slack.com/block-kit-builder/T1L0WSW9F)
-        // console.log(JSON.stringify(openHelpRequestBlocks().blocks))
+        console.log('JSON for block-kit builder')
+        console.log(JSON.stringify(openHelpRequestBlocks().blocks))
 
         await client.views.open({
             trigger_id: shortcut.trigger_id,
@@ -370,7 +371,7 @@ app.view('create_help_request', async ({ ack, body, view, client }) => {
             userEmail,
             labels: extractLabels(view.state.values)
         })
-
+        console.log(`Jira created ${jiraId}`)
         const result = await client.chat.postMessage({
             channel: reportChannel,
             text: 'New support request raised',
@@ -379,7 +380,7 @@ app.view('create_help_request', async ({ ack, body, view, client }) => {
                 jiraId
             })
         });
-
+        console.log(`Posting messages to channel...`)
         await client.chat.postMessage({
             channel: reportChannel,
             thread_ts: result.message.ts,
@@ -387,11 +388,12 @@ app.view('create_help_request', async ({ ack, body, view, client }) => {
             blocks: helpRequestDetails(helpRequest)
         });
 
+        console.log(`Message posted to channel...`)
         const permaLink = (await client.chat.getPermalink({
             channel: result.channel,
             'message_ts': result.message.ts
         })).permalink
-
+        console.log(`Updated Description`)
         await updateHelpRequestDescription(jiraId, {
             ...helpRequest,
             slackLink: permaLink
@@ -768,7 +770,7 @@ app.event('message', async ({ event, context, client, say }) => {
                 helpRequestMessages[0].text === 'Duplicate issue')
             ) {
                 const jiraId = extractJiraIdFromBlocks(helpRequestMessages[0].blocks)
-
+                console.log(`Jira extracted ${jiraId}`)
                 const groupRegex = /<!subteam\^.+\|([^>.]+)>/g
                 const usernameRegex = /<@([^>.]+)>/g
 
@@ -780,14 +782,16 @@ app.event('message', async ({ event, context, client, say }) => {
                     }))
                     return `@${convertProfileToName(user.profile)}`
                 });
-
+                console.log(`newTargetText ${newTargetText}`)
                 await addCommentToHelpRequest(jiraId, {
                     slackLink,
                     name,
                     message: newTargetText
                 })
+                 console.log(`Jira extracted ${jiraId}`)
             } else {
                 // either need to implement pagination or find a better way to get the first message in the thread
+                console.log(`Could not find jira ID, possibly thread is longer than 200 message`)
                 console.warn("Could not find jira ID, possibly thread is longer than 200 messages, TODO implement pagination");
             }
         }
