@@ -2,8 +2,8 @@
 slack:
   # bot_token: no default
   # app_token: no default
-  report_channel: pofcc-onboarding-support
-  report_channel_id: C09LE7XVCMV
+  report_channel: possessions-onboarding-support
+  report_channel_id: C09PJD1KN20
 
 jira:
   start_transition_id: 21
