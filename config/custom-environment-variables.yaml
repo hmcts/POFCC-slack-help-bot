@@ -12,3 +12,4 @@ jira:
   issue_type_name: JIRA_ISSUE_TYPE_NAME
   username: JIRA_USERNAME
   api_token: JIRA_API_TOKEN
+  epic_name: JIRA_EPIC_NAME
