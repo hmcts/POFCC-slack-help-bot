@@ -194,7 +194,7 @@ async function createHelpRequest({
         result = await createHelpRequestInJira(summary, project, user, labels, epicName);
     } catch(err) {
         // in case the user doesn't exist in Jira use the system user
-        result = await createHelpRequestInJira(summary, project, systemUser, labels);
+        result = await createHelpRequestInJira(summary, project, systemUser, labels, epicName);
 
         if (!result.key) {
             console.log("Error creating help request in jira", JSON.stringify(result));
