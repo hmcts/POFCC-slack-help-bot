@@ -167,8 +167,8 @@ async function createHelpRequestInJira(summary, project, user, labels, epicName)
                 id: project.id
             },
             labels: ['created-from-slack', ...labels],
-            customfield_10008: epicName
             description: undefined,
+            customfield_10008: epicName
         }
     });
 
@@ -185,7 +185,6 @@ async function createHelpRequest({
     const project = await jira.getProject(jiraProject);
 
     const epicName = await jira.getEpicName(jiraEpicName);
-
 
     // https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issues/#api-rest-api-2-issue-post
     // note: fields don't match 100%, our Jira version is a bit old (still a supported LTS though)
