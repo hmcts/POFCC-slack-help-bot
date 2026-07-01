@@ -205,7 +205,6 @@ const ws = new WorkflowStep('superbot_help_request', {
 
         const helpRequest = {
             user,
-            userEmail:userEmail,
             summary: inputs.summary.value || "None",
             team: inputs.team.value || "None",
             description: inputs.desc.value,
