@@ -13,7 +13,8 @@ function mapFieldsToDescription(
         environment,
         description,
         analysis,
-        slackLink
+        slackLink,
+        userEmail
     }) {
     return `
 h6. _This is an automatically generated ticket created from Slack, do not reply or update in here, [view in Slack|${slackLink}]_
@@ -35,6 +36,7 @@ ${replicateSteps}
 *Analysis done so far*: 
 ${analysis}
 
+*Reporter*: ${userEmail}
 `
 }
 

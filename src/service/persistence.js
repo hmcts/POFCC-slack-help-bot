@@ -8,6 +8,7 @@ const issueTypeId = config.get('jira.issue_type_id')
 const issueTypeName = config.get('jira.issue_type_name')
 
 const jiraProject = config.get('jira.project')
+const jiraEpicName = config.get('jira.epic_name')
 
 const jiraStartTransitionId = config.get('jira.start_transition_id')
 const jiraDoneTransitionId = config.get('jira.done_transition_id')
@@ -154,7 +155,7 @@ async function convertEmail(email) {
     }
 }
 
-async function createHelpRequestInJira(summary, project, user, labels) {
+async function createHelpRequestInJira(summary, project, user, labels, epicName) {
     console.log(`Creating help request in Jira for user: ${user}`)
     const issue = await jira.addNewIssue({
         fields: {
@@ -167,6 +168,7 @@ async function createHelpRequestInJira(summary, project, user, labels) {
             },
             labels: ['created-from-slack', ...labels],
             description: undefined,
+            customfield_10008: epicName
         }
     });
 
@@ -182,15 +184,17 @@ async function createHelpRequest({
 
     const project = await jira.getProject(jiraProject);
 
+    const epicName = await jira.getEpicName(jiraEpicName);
+
     // https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issues/#api-rest-api-2-issue-post
     // note: fields don't match 100%, our Jira version is a bit old (still a supported LTS though)
 
     let result
     try {
-        result = await createHelpRequestInJira(summary, project, user, labels);
+        result = await createHelpRequestInJira(summary, project, user, labels, epicName);
     } catch(err) {
         // in case the user doesn't exist in Jira use the system user
-        result = await createHelpRequestInJira(summary, project, systemUser, labels);
+        result = await createHelpRequestInJira(summary, project, systemUser, labels, epicName);
 
         if (!result.key) {
             console.log("Error creating help request in jira", JSON.stringify(result));

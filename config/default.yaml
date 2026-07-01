@@ -11,5 +11,6 @@ jira:
   project: POFCC
   issue_type_name: Support
   issue_type_id: 18400
+  epic_name: POFCC-25
   # username: no default
   # api_token: no default
