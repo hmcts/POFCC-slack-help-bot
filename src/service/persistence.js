@@ -8,6 +8,7 @@ const issueTypeId = config.get('jira.issue_type_id')
 const issueTypeName = config.get('jira.issue_type_name')
 
 const jiraProject = config.get('jira.project')
+//get epic name
 const jiraEpicName = config.get('jira.epic_name')
 
 const jiraStartTransitionId = config.get('jira.start_transition_id')
