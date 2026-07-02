@@ -214,7 +214,6 @@ const ws = new WorkflowStep('superbot_help_request', {
             testAccount: inputs.testAccount.value,
             references: inputs.references.value
         }
-        console.log("user email in line 217..." + userEmail)
         // using JIRA version v8.15.0#815001-sha1:9cd993c:node1,
         // check if API is up-to-date
         const jiraId = await createHelpRequest({
@@ -366,7 +365,6 @@ app.view('create_help_request', async ({ ack, body, view, client }) => {
             replicateSteps: view.state.values.replicateSteps.replicateSteps.value,
             testAccount: view.state.values.testAccount.testAccount.value,
         }
-        console.log("userEmail in line 369..." + userEmail)
         const jiraId = await createHelpRequest({
             summary: helpRequest.summary,
             userEmail,
