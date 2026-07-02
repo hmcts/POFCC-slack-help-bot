@@ -205,8 +205,6 @@ async function createHelpRequest({
 
 async function updateHelpRequestDescription(issueId, fields) {
     const jiraDescription = mapFieldsToDescription(fields);
-    console.log("Jira Description ....", jiraDescription);
-     console.log("fields ....", fields);
     try {
         await jira.updateIssue(issueId, {
             update: {
