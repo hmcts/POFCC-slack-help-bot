@@ -337,10 +337,6 @@ function extractLabels(values) {
 }
 
 app.view('create_help_request', async ({ ack, body, view, client }) => {
-    ////////////////////////////////////////////////////////////
-    //// SuperBot: This entry point isn't used anymore, but ////
-    ////           we can keep it around just in case :)    ////
-    ////////////////////////////////////////////////////////////
 
     // Acknowledge the view_submission event
     await ack();
