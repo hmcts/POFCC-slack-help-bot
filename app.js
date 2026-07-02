@@ -205,7 +205,6 @@ const ws = new WorkflowStep('superbot_help_request', {
 
         const helpRequest = {
             user,
-            userEmail,
             summary: inputs.summary.value || "None",
             team: inputs.team.value || "None",
             description: inputs.desc.value,
@@ -351,7 +350,6 @@ app.view('create_help_request', async ({ ack, body, view, client }) => {
 
         const helpRequest = {
             user,
-            userEmail,
             summary: view.state.values.summary.title.value,
             priority: view.state.values.priority.priority.selected_option.text.text,
             references: view.state.values.references?.references?.value || "None",
