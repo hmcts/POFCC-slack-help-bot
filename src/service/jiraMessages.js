@@ -35,7 +35,7 @@ ${replicateSteps}
 *Analysis done so far*: 
 ${analysis}
 
-
+`
 }
 
 function createComment({slackLink, name, message}) {
