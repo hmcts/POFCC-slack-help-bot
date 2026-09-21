@@ -1,7 +1,8 @@
 const { convertIso8601ToEpochSeconds } = require('./dateHelper');
 
 function convertJiraKeyToUrl(jiraId) {
-    return `https://tools.hmcts.net/jira/browse/${jiraId}`;
+    const browseUrl = config.get("jira.browse_url");
+    return `${browseUrl.replace(/\/+$/, "")}/browse/${jiraId}`;
 }
 
 const config = require('config')
@@ -738,3 +739,4 @@ module.exports.superBotMessageBlocks = superBotMessageBlocks;
 module.exports.duplicateHelpRequest = duplicateHelpRequest;
 module.exports.resolveHelpRequestBlocks = resolveHelpRequestBlocks;
 module.exports.helpRequestDocumentation = helpRequestDocumentation;
+module.exports.convertJiraKeyToUrl = convertJiraKeyToUrl;
