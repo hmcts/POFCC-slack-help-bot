@@ -1,4 +1,33 @@
 const messages = require('./messages')
+const config = require("config"); 
+
+describe("convertJiraKeyToUrl", () => {
+    let configGetSpy;
+
+    beforeEach(() => {
+      configGetSpy = jest.spyOn(config, 'get');
+    });
+
+    afterEach(() => {
+      configGetSpy.mockRestore();
+    });
+
+    it.each([
+      [
+        'https://tools.hmcts.net/jira',
+        'https://tools.hmcts.net/jira/browse/TEST-1',
+      ],
+      [
+        'https://example.atlassian.net/',
+        'https://example.atlassian.net/browse/TEST-1',
+      ],
+    ])('uses the configured base URL', (baseUrl, expected) => {
+      configGetSpy.mockReturnValue(baseUrl);
+
+      expect(messages.convertJiraKeyToUrl('TEST-1')).toBe(expected);
+      expect(configGetSpy).toHaveBeenCalledWith('jira.browse_url');
+    });
+});
 
 describe('extractSlackLinkFromText', () => {
     it('returns undefined when undefined', () => {
@@ -21,7 +50,7 @@ describe('extractSlackMessageIdFromText', () => {
         expect(messages.extractSlackMessageIdFromText("hello world")).toBe(undefined)
     })
     it('returns slack message id when found', () => {
-        expect(messages.extractSlackMessageIdFromText("*<https://platformengin-tzf2541.slack.com/archives/C01KHKNJUKE/p1611568116006500|Dummy>*\n"))
+        expect(messages.extractSlackMessageIdFromText("*<https://platformengin-tzf2541.slack.com/archives/C09PJD1KN20/p1611568116006500|Dummy>*\n"))
             .toBe('p1611568116006500')
     })
 })

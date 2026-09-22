@@ -6,11 +6,14 @@ slack:
   report_channel_id: C09PJD1KN20
 
 jira:
-  start_transition_id: 21
-  done_transition_id: 41
+  api_url: "https://api.atlassian.com/ex/jira/"
+  browse_url: "https://hmcts.atlassian.net"
+  #cloud_id: no default
+  start_transition_id: 181
+  done_transition_id: 201
   project: POFCC
   issue_type_name: Support
-  issue_type_id: 18400
+  issue_type_id: 10016
   epic_name: POFCC-25
   # username: no default
   # api_token: no default

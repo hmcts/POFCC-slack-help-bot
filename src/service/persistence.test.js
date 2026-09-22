@@ -1,39 +1,80 @@
-const jira = require('./persistence')
-const config = require('config')
+const persistence = require('./persistence')
+const config = require("config"); 
 
-const systemUser = config.get('jira.username')
+const SYSTEM_ACCOUNT_ID = 'SYS_ACC_ID';
 
-describe('convertEmail', () => {
-    it('strips email', () => {
-        expect(jira.convertEmail('bobs.uncle@hmcts.net')).toBe('bobs.uncle')
-    })
-    it('returns system email if null', () => {
-        expect(jira.convertEmail(null)).toBe(systemUser)
-    })
-    it('returns system email if undefined', () => {
-        expect(jira.convertEmail(null)).toBe(systemUser)
-    })
-    it('returns username if no @ sign in email', () => {
-        expect(jira.convertEmail('bobs.uncle')).toBe('bobs.uncle')
-    })
-})
+describe('persistence', () => {
+    let configGetSpy;
+    let jiraGetCurrentUser;
+    
+    beforeEach(() => {
+        configGetSpy = jest.spyOn(config, 'get').mockImplementation((arg) => {
+            return arg === 'jira.username' ? 'J_USER' : 'API_TOKEN';
+        });
+        
+        jiraGetCurrentUser = jest.spyOn(persistence.jira, 'getCurrentUser');
+        jiraGetCurrentUser.mockReturnValue(Promise.resolve({accountId: SYSTEM_ACCOUNT_ID}));
+    });
 
-describe('extractJiraId', () => {
-    it('extracts the key', () => {
-        const actual = jira.extractJiraIdFromBlocks([
-            {},
-            {},
-            {},
-            {},
-            {
-                elements: [
-                    {
-                        text: 'View on Jira: <https://tools.hmcts.net/jira/browse/SBOX-61|SBOX-61>'
-                    }
-                ]
-            }
-        ])
+    afterEach(() => {
+        configGetSpy.mockRestore();
+        jiraGetCurrentUser.mockRestore();
+    });
 
-        expect(actual).toBe('SBOX-61')
+    describe('getSystemAccountId', () => {
+
+        it('returns the system user account ID', async () => {
+            let userId = await persistence.getSystemAccountId();
+            expect(userId).toBe(SYSTEM_ACCOUNT_ID);
+        });
     })
-})
+
+    describe('convertEmail', () => {
+
+        it('returns system email if no given email', async () => {
+            const getSystemAccountId = jest.spyOn(persistence, 'getSystemAccountId');
+            getSystemAccountId.mockReturnValue(Promise.resolve());
+
+            let userId = await persistence.convertEmail(null);
+            expect(userId).toBe(SYSTEM_ACCOUNT_ID);
+
+            userId = await persistence.convertEmail(undefined);
+            expect(userId).toBe(SYSTEM_ACCOUNT_ID);
+
+            getSystemAccountId.mockRestore();
+        });
+
+        it('searches for users and gets the account ID', async () => {
+            const searchUsers = jest.spyOn(persistence.jira, 'searchUsers');
+            searchUsers.mockReturnValue(Promise.resolve([{accountId: SYSTEM_ACCOUNT_ID}]));
+
+            const userId = await persistence.convertEmail('bobs.uncle@hmcts.net');
+
+            expect(userId).toBe(SYSTEM_ACCOUNT_ID);
+
+            searchUsers.mockRestore();
+        })
+    })
+
+    describe('extractJiraId', () => {
+        it('extracts the key', () => {
+            const actual = persistence.extractJiraIdFromBlocks([
+                {},
+                {},
+                {},
+                {},
+                {
+                    elements: [
+                        {
+                            text: 'View on Jira: <https://tools.hmcts.net/jira/browse/POFCC-61?someArg=3>'
+                        }
+                    ]
+                }
+            ])
+
+            expect(actual).toBe('POFCC-61')
+        })
+    })
+});
+
+
