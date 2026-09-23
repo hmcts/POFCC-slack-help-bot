@@ -1,23 +1,16 @@
 const persistence = require('./persistence')
-const config = require("config"); 
 
 const SYSTEM_ACCOUNT_ID = 'SYS_ACC_ID';
 
 describe('persistence', () => {
-    let configGetSpy;
     let jiraGetCurrentUser;
     
     beforeEach(() => {
-        configGetSpy = jest.spyOn(config, 'get').mockImplementation((arg) => {
-            return arg === 'jira.username' ? 'J_USER' : 'API_TOKEN';
-        });
-        
         jiraGetCurrentUser = jest.spyOn(persistence.jira, 'getCurrentUser');
         jiraGetCurrentUser.mockReturnValue(Promise.resolve({accountId: SYSTEM_ACCOUNT_ID}));
     });
 
     afterEach(() => {
-        configGetSpy.mockRestore();
         jiraGetCurrentUser.mockRestore();
     });
 
