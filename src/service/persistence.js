@@ -201,7 +201,7 @@ async function createHelpRequestInJira(summary, project, user, labels, epicName)
             },
             labels: ['created-from-slack', ...labels],
             description: undefined,
-            customfield_10008: epicName
+            ...(user ? { reporter: { accountId: user } } : {}),
         }
     });
 
