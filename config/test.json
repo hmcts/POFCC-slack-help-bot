@@ -1,1 +1,6 @@
-{}
+{
+    "jira": {
+      "username": "JIRA_USER",
+      "api_token": "API_TOKEN"
+    }
+  }
