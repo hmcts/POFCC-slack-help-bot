@@ -199,6 +199,7 @@ async function createHelpRequestInJira(summary, project, user, labels, epicName)
             project: {
                 id: project.id
             },
+            ...(epicName ? { parent: { key: epicName } } : {}),
             labels: ['created-from-slack', ...labels],
             description: undefined,
             ...(user ? { reporter: { accountId: user } } : {}),
