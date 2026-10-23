@@ -2,106 +2,128 @@
 
 Listens for new posts in a designated Slack channel and raises a coresponding request in Jira.
 
-## Creating the Slack App 
-<details>
-  <summary>Steps</summary>
+## Introduction
 
-1. Create a new app in your workspace.
+This is a Slack app that is defined within Slack through their [website](https://api.slack.com/apps). 
 
-<img src="images/step1.png" width=50% height=50% />
+By defining the app, it is available for users within Slack itself. The [configuration](./docs/configuring-a-slack-app.md) of the app will decide how a user can interact with it, e.g. listen for user events, @mentions, etc.. 
 
-2. Head to socket mode and enable it. You will then be asked to create a new token (call it **jira-integration**) This will only have **connections:write** in the scope. Select **Generate**. Copy the generated token as this will be required for the slack-help-bot configuration.
+The app does not include any functionality, e.g. what happens when a user is mentioned. This functionality is provided by this NodeJS application.
 
-<img src="images/step2.png" width=50% height=50% />
+This NodeJS application is configured to interact with the Slack app using specific keys.
 
-3. Head to **Event subscriptions** and enable it. 
+All communication is done locally (even in production) using [socket mode](https://docs.slack.dev/apis/events-api/using-socket-mode/) which means no external HTTP requests are used.
 
-<img src="images/step3.png" width=50% height=50% />
 
-4. Expand the **Subscribe to bot events** tab, add the following settings and save changes.
+## Existing Slack Apps
 
-<img src="images/step4.png" width=50% height=50% />
+> [Creating a new Slack app](./docs/create-a-new-app.md) is not required!
 
-5. Expand the **Subscribe to events on behalf of users** tab, add the following settings and save changes.
+There are 2 slack apps already created and configured for this help bot:
 
-<img src="images/step5.png" width=50% height=50% />
+- Possessions Onboarding Help - used in production, accessed in Slack with `/help` 
+- Test onboarding help bot - used for local testing, accessed in Slack with `/test`
 
-6. Head to **Interactivity and shortcuts** and create a **Global** shortcut with the following settings and save changes. 
+The apps should be configured in the same way. Therefore, the [Test onboarding help bot](https://app.slack.com/app-settings/T1L0WSW9F/A0CATNRFQLB/general) can be used for local development and testing. 
 
-<img src="images/step6.png" width=50% height=50% />
+> Theoretically the production app could be used for local testing, but this requires access to [configuration](./docs/configuring-a-slack-app.md) details in slack, which developers don't have.
 
-7. Head to **Oauth and Permissions** and install the app to your workspace. Allow the app the default permissions. Copy the generated **Bot User OAuth Access Token** as this will be required for the slack-help-bot configuration. 
+## Creating a Slack Channel
 
-<img src="images/step7.png" width=50% height=50% />
+This application works by collecting information from a user request and providing notifications into a Slack channel. 
 
-8. Invite the app in the channel where you would like it to be used in Slack. Make a note of the **channel ID** as this will later be required in the slack-help-bot configuration. You can get the channel ID by right clicking, 'copy link', and then it will be the bit after archives in the url, e.g. `C01APTJAM7D`.
+The **production** channel is **already created**, e.g. components-onboarding-support.
 
-</details>
+For testing, a Slack channel must be created. This is done in Slack as for any other channel. 
 
-## Getting Started with the Bot
+Once created, open the channel details and **add the [Slack app](#existing-slack-apps)**. Now the channel will listen for notifications from the Slack app.
 
-### Prerequisites
+> The **name** and **ID** of this channel are required to [configure the NodeJS application](#configuration) 
+
+## Running the NodeJS application
+
+### Prerequisites 
 
 Running the application requires the following tools to be installed in your environment:
 
   * [Node.js](https://nodejs.org/) v18.0.0 or later
   * [npm](https://www.npmjs.com/)
-  * [Docker](https://www.docker.com)
 
-You need to create a Slack App as detailed in the steps above. For development purposes, this will have to be created in a new Slack workspace.
-You will also need the JIRA details. For development purposes, these values can be found in the "env.template.txt" file for the HMCTS Jira SBOX Project.
 
-Set the relevant environment variables defined in [env.template.txt](env) based on above steps.
+### Configuration 
 
-## Running the application
+The application must be configured to reference the [Slack App](#existing-slack-apps) and for any other parameters.
 
-We use 'Socket mode' so no need to proxy Slack's requests. 
+Configuration is done using a [default.json](./config/default.yaml) which holds reasonable defaults, which are overridden by environment variables as defined in [custom-environment-variables.yaml](./config/custom-environment-variables.yaml).
 
-### Running on Kubernetes
+Therefore, to configure the application, set the environment variables.
 
-The application can be deployed on Kubernetes using the [HMCTS nodejs chart](https://github.com/hmcts/chart-nodejs). To avoid exposing sensitive data from the configuration above you can add them as secrets from an Azure Key Vault. See the chart documentation for further info. 
+For local development this can be done by creating a `.env` file that is [git ignored](./.gitignore), e.g.:
 
-### Running locally
+```properties
+# configuration to interact with Slack
+SLACK_BOT_TOKEN=<bot token from Slack App>
+SLACK_APP_TOKEN=<app token from Slack App>
+SLACK_REPORT_CHANNEL=<name of Slack Channel>
+SLACK_REPORT_CHANNEL_ID=<ID of Slack Channel>
 
-All configuration requirements listed above can be found in the "env.template.txt" file.
+# configuration to interact with JIRA
+JIRA_BROWSE_URL=https://hmcts-sandbox4.atlassian.net 
+JIRA_CLOUD_ID=<specific to JIRA environment>
+JIRA_USERNAME=secret
+JIRA_API_TOKEN=secret
 
-Rename "env.template.txt" to ".env" which is gitignored and safe for secrets.
+# different environments can have different IDs
+JIRA_ISSUE_TYPE_ID=10115    # TEST env ID 
+```
 
-Source into your shell with:
+> The SLACK tokens are retrieved from the [Slack App](#existing-slack-apps)
 
- ```bash
-$ set -o allexport; source .env; set +o allexport
- ```
+> Other specified values are for the test environment
 
-Install dependencies by executing the following command:
+#### JIRA
 
- ```bash
-$ npm install
- ```
-Run:
+To access the external JIRA system, some properties are required that are secrets. The values for the [test environment](#existing-slack-apps) se are held in the usual way in the **Azure rpx-aat key vault**:
+
+- jira-sandbox-api-user-email
+- jira-sandbox-api-token
+
+The [cloud ID](https://support.atlassian.com/jira/kb/retrieve-my-atlassian-sites-cloud-id/) can be found from the JIRA environment itself.
+
+#### Production
+
+The production environment is deployed in **cft-ptl-00-aks** and can be accessed in the normal way.
+
+
+### Building
 
 ```bash
+npm ci;
+```
+
+### Running tests
+
+```bash
+npm run test;
+```
+
+### Run the application
+
+Source your configuration, then run:
+
+```bash
+$ set -o allexport; source .env; set +o allexport
 $ node app.js
 ```
 
-#### Running locally with Docker
-
-There is no need to source your configuration. The ".env" file will be mounted as a volume.  
-
-Create docker image:
-
-```bash
-  docker-compose build
-```
-
-Run the application by executing the following command:
-
-```bash
-  docker-compose up
-```
-
-This will start the frontend container exposing the application's port
-(set to `3000` in this template app).
-
 In order to test if the application is up, you can visit https://localhost:3000/health in your browser.
-You should get a very basic health page (no styles, etc.).
+
+#### Debugging in VsCode
+
+- Open JavaScript Debug terminal; the debugger will automatically attach
+- [Run the application](#run-the-application)
+
+
+## Using the app
+
+This depends on which [Existing Slack App](#existing-slack-apps) is being used.
